@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Recording Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        video { width: 100%; max-width: 500px; border: 2px solid #ccc; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .container { max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎥 Video Recording Test</h1>
+        
+        <div>
+            <h3>Camera Feed:</h3>
+            <video id="video" autoplay muted playsinline style="display: none;"></video>
+            <p id="status">Click "Start Camera" to begin</p>
+        </div>
+        
+        <div>
+            <button id="startBtn" onclick="startCamera()">Start Camera</button>
+            <button id="recordBtn" onclick="startRecording()" disabled>Start Recording</button>
+            <button id="stopBtn" onclick="stopRecording()" disabled>Stop Recording</button>
+            <button id="submitBtn" onclick="submitVideo()" disabled>Submit Video</button>
+        </div>
+        
+        <div id="preview" style="display: none;">
+            <h3>Recorded Video:</h3>
+            <video id="previewVideo" controls></video>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let currentStream = null;
+
+        async function startCamera() {
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 },
+                    audio: true
+                });
+                
+                const video = document.getElementById('video');
+                video.srcObject = currentStream;
+                video.style.display = 'block';
+                
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('recordBtn').disabled = false;
+                document.getElementById('status').textContent = 'Camera started! Click "Start Recording" to begin.';
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        function startRecording() {
+            mediaRecorder = new MediaRecorder(currentStream);
+            recordedChunks = [];
+            
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                
+                const previewVideo = document.getElementById('previewVideo');
+                previewVideo.src = url;
+                document.getElementById('preview').style.display = 'block';
+                document.getElementById('submitBtn').disabled = false;
+            };
+            
+            mediaRecorder.start();
+            document.getElementById('recordBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            document.getElementById('status').textContent = 'Recording... Click "Stop Recording" when done.';
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            document.getElementById('recordBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('status').textContent = 'Recording stopped! Review and submit.';
+        }
+
+        async function submitVideo() {
+            if (recordedChunks.length === 0) {
+                alert('No video recorded!');
+                return;
+            }
+
+            try {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const formData = new FormData();
+                formData.append('video', blob, `test-video-${Date.now()}.webm`);
+                formData.append('actionType', 'selfie-clean');
+                formData.append('description', 'Test video upload');
+
+                const response = await fetch('/api/videos/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.text();
+                document.getElementById('result').innerHTML = `
+                    <h3>Upload Result:</h3>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Response:</strong></p>
+                    <pre>${result}</pre>
+                `;
+
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <h3>Upload Error:</h3>
+                    <p style="color: red;">${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

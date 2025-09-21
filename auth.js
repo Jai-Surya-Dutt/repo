@@ -136,10 +136,14 @@ class Auth {
     const defaultOptions = {
       headers: {
         'Authorization': `Bearer ${this.token}`,
-        'Content-Type': 'application/json',
         ...options.headers
       }
     };
+
+    // Only set Content-Type if not already set (for file uploads)
+    if (!options.headers || !options.headers['Content-Type']) {
+      defaultOptions.headers['Content-Type'] = 'application/json';
+    }
 
     return fetch(url, { ...options, ...defaultOptions });
   }

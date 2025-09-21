@@ -227,6 +227,53 @@ class FileStorage {
         return null;
     }
 
+    // Video operations
+    createVideo(videoData) {
+        const videos = this.readData('videos');
+        const video = {
+            _id: this.generateId(),
+            ...videoData,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        videos.push(video);
+        this.writeData('videos', videos);
+        return video;
+    }
+
+    getVideos() {
+        return this.readData('videos');
+    }
+
+    saveVideos(videos) {
+        this.writeData('videos', videos);
+    }
+
+    findVideos(query = {}) {
+        const videos = this.readData('videos');
+        return videos.filter(video => {
+            if (query.userId && video.userId !== query.userId) return false;
+            if (query.actionType && video.actionType !== query.actionType) return false;
+            if (query.status && video.status !== query.status) return false;
+            return true;
+        });
+    }
+
+    updateVideo(videoId, updateData) {
+        const videos = this.readData('videos');
+        const videoIndex = videos.findIndex(video => video._id === videoId);
+        if (videoIndex !== -1) {
+            videos[videoIndex] = {
+                ...videos[videoIndex],
+                ...updateData,
+                updatedAt: new Date().toISOString()
+            };
+            this.writeData('videos', videos);
+            return videos[videoIndex];
+        }
+        return null;
+    }
+
     // Statistics
     getUserStats(userId) {
         const transactions = this.findTransactions({ user: userId });

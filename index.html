@@ -12,7 +12,17 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <h2 style="font-size: xx-large; font-family: 'Times New Roman', Times, serif;">🌱 Civil Sathi</h2>
+                <div class="logo-container">
+                    <div class="logo-tree">
+                        <div class="tree-trunk"></div>
+                        <div class="tree-canopy"></div>
+                        <div class="tree-ground"></div>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="brand-name">CIVIL SATHI</h1>
+                        <p class="tagline">Cleaning with Earning</p>
+                    </div>
+                </div>
             </div>
             <div class="nav-menu">
                 <a href="#home" class="nav-link">Home</a>
@@ -121,7 +131,7 @@
             
             <div class="selfie-container">
                 <div class="camera-container">
-                    <video id="video" autoplay></video>
+                    <video id="video" autoplay muted playsinline style="width: 100%; max-width: 500px; border-radius: 10px;"></video>
                     <canvas id="canvas" style="display: none;"></canvas>
                     <div class="camera-overlay">
                         <div class="capture-area"></div>
@@ -129,14 +139,21 @@
                 </div>
                 
                 <div class="selfie-controls">
-                    <button id="startCamera" class="btn btn-primary">Start Camera</button>
-                    <button id="capturePhoto" class="btn btn-success" disabled>Capture Selfie</button>
-                    <button id="submitPhoto" class="btn btn-warning" disabled>Submit for Credits</button>
+                    <button id="startCamera" class="btn btn-primary" onclick="startVideoRecording()">Start Camera</button>
+                    <button id="stopRecording" class="btn btn-danger" style="display: none;" onclick="stopVideoRecording()">Stop Recording</button>
+                    <button id="submitVideo" class="btn btn-warning" disabled onclick="submitVideo('selfie-clean', 'Environmental cleanup selfie video')">Submit Video for Credits</button>
                 </div>
                 
                 <div class="photo-preview" id="photoPreview" style="display: none;">
                     <img id="previewImg" src="" alt="Captured Photo">
                     <p>Great! You've captured your environmental action. Submit to earn 10 credits!</p>
+                </div>
+                
+                <div class="video-preview" id="videoPreview" style="display: none;">
+                    <video id="previewVideo" controls style="width: 100%; max-width: 400px;">
+                        <source src="" type="video/webm">
+                    </video>
+                    <p>Great! You've recorded your environmental action. Submit to earn 10 credits!</p>
                 </div>
             </div>
         </div>
@@ -159,7 +176,9 @@
                         </div>
                         <span class="progress-text">0/5</span>
                     </div>
-                    <button class="btn btn-task" onclick="updateTask('recycle')">Mark Complete</button>
+                    <button class="btn btn-task btn-start-recording" onclick="startTaskVideoRecording('recycle')">Start Recording</button>
+                    <button class="btn btn-danger btn-stop-recording" style="display: none;" onclick="stopTaskVideoRecording('recycle')">Stop Recording</button>
+                    <button class="btn btn-success btn-submit-video" style="display: none;" onclick="submitTaskVideo('recycle')">Submit Video</button>
                     <div class="task-reward">Reward: 50 Credits</div>
                 </div>
                 
@@ -173,7 +192,9 @@
                         </div>
                         <span class="progress-text">0/1</span>
                     </div>
-                    <button class="btn btn-task" onclick="updateTask('plant')">Mark Complete</button>
+                    <button class="btn btn-task btn-start-recording" onclick="startTaskVideoRecording('plant')">Start Recording</button>
+                    <button class="btn btn-danger btn-stop-recording" style="display: none;" onclick="stopTaskVideoRecording('plant')">Stop Recording</button>
+                    <button class="btn btn-success btn-submit-video" style="display: none;" onclick="submitTaskVideo('plant')">Submit Video</button>
                     <div class="task-reward">Reward: 100 Credits</div>
                 </div>
                 
@@ -187,7 +208,9 @@
                         </div>
                         <span class="progress-text">0/1</span>
                     </div>
-                    <button class="btn btn-task" onclick="updateTask('cleanup')">Mark Complete</button>
+                    <button class="btn btn-task btn-start-recording" onclick="startTaskVideoRecording('cleanup')">Start Recording</button>
+                    <button class="btn btn-danger btn-stop-recording" style="display: none;" onclick="stopTaskVideoRecording('cleanup')">Stop Recording</button>
+                    <button class="btn btn-success btn-submit-video" style="display: none;" onclick="submitTaskVideo('cleanup')">Submit Video</button>
                     <div class="task-reward">Reward: 75 Credits</div>
                 </div>
                 
@@ -201,7 +224,9 @@
                         </div>
                         <span class="progress-text">0/2</span>
                     </div>
-                    <button class="btn btn-task" onclick="updateTask('energy')">Mark Complete</button>
+                    <button class="btn btn-task btn-start-recording" onclick="startTaskVideoRecording('energy')">Start Recording</button>
+                    <button class="btn btn-danger btn-stop-recording" style="display: none;" onclick="stopTaskVideoRecording('energy')">Stop Recording</button>
+                    <button class="btn btn-success btn-submit-video" style="display: none;" onclick="submitTaskVideo('energy')">Submit Video</button>
                     <div class="task-reward">Reward: 30 Credits</div>
                 </div>
             </div>
