@@ -1,0 +1,107 @@
+[
+  {
+    "_id": "3c141110b7189a94fb93b982e8513c42",
+    "code": "CS12345678",
+    "name": "Amazon Shopping Voucher",
+    "description": "Get 30% off on any Amazon purchase",
+    "type": "percentage",
+    "value": 30,
+    "cost": {
+      "credits": 100
+    },
+    "validity": {
+      "startDate": "2025-09-21T00:02:04.469Z",
+      "endDate": "2026-09-21T00:02:04.470Z",
+      "isActive": true
+    },
+    "usage": {
+      "limit": {
+        "total": 1000,
+        "perUser": 3,
+        "used": 0
+      }
+    },
+    "partner": {
+      "name": "Amazon",
+      "website": "https://amazon.com",
+      "description": "World's largest online marketplace"
+    },
+    "metadata": {
+      "category": "shopping",
+      "featured": true,
+      "priority": 10
+    },
+    "createdAt": "2025-09-21T00:02:04.473Z",
+    "updatedAt": "2025-09-21T00:02:04.473Z"
+  },
+  {
+    "_id": "bbc729f5ad6347d043c6b11d7d4609c3",
+    "code": "CS87654321",
+    "name": "Premium Shopping Voucher",
+    "description": "Get 40% off on any purchase",
+    "type": "percentage",
+    "value": 40,
+    "cost": {
+      "credits": 200
+    },
+    "validity": {
+      "startDate": "2025-09-21T00:02:04.470Z",
+      "endDate": "2026-09-21T00:02:04.470Z",
+      "isActive": true
+    },
+    "usage": {
+      "limit": {
+        "total": 500,
+        "perUser": 2,
+        "used": 0
+      }
+    },
+    "partner": {
+      "name": "Premium Partners",
+      "website": "https://premium-partners.com",
+      "description": "Premium shopping experience"
+    },
+    "metadata": {
+      "category": "shopping",
+      "featured": true,
+      "priority": 8
+    },
+    "createdAt": "2025-09-21T00:02:04.474Z",
+    "updatedAt": "2025-09-21T00:02:04.474Z"
+  },
+  {
+    "_id": "6ea66add9154e9d83d34564551596908",
+    "code": "CS11111111",
+    "name": "Elite Voucher",
+    "description": "Get 50% off + Free Shipping",
+    "type": "percentage",
+    "value": 50,
+    "cost": {
+      "credits": 500
+    },
+    "validity": {
+      "startDate": "2025-09-21T00:02:04.470Z",
+      "endDate": "2026-09-21T00:02:04.470Z",
+      "isActive": true
+    },
+    "usage": {
+      "limit": {
+        "total": 100,
+        "perUser": 1,
+        "used": 0
+      }
+    },
+    "partner": {
+      "name": "Elite Partners",
+      "website": "https://elite-partners.com",
+      "description": "Exclusive elite shopping"
+    },
+    "metadata": {
+      "category": "shopping",
+      "featured": true,
+      "priority": 5
+    },
+    "createdAt": "2025-09-21T00:02:04.476Z",
+    "updatedAt": "2025-09-21T00:02:04.476Z"
+  }
+]

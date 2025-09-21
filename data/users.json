@@ -1,0 +1,52 @@
+[
+  {
+    "_id": "123da8fb40e6b3dcacb96c701e97f44d",
+    "username": "admin",
+    "email": "admin@civilsathi.com",
+    "password": "$2a$12$eqNd7dIUQj8Sm9Gzx4pF1edSDg1Uo6B3LTk4geoOI.LyNsvzfKKyG",
+    "profile": {
+      "firstName": "Admin",
+      "lastName": "User"
+    },
+    "credits": 10000,
+    "stats": {
+      "totalCleanups": 0,
+      "tasksCompleted": 0,
+      "environmentalImpact": {
+        "co2Saved": 0,
+        "wasteRecycled": 0,
+        "treesPlanted": 0
+      }
+    },
+    "achievements": [],
+    "isActive": true,
+    "lastLogin": "2025-09-21T00:12:21.830Z",
+    "createdAt": "2025-09-20T23:59:16.095Z",
+    "updatedAt": "2025-09-21T00:12:21.830Z"
+  },
+  {
+    "_id": "6b6d4c4ee944d154f6a644cb4f6c7ae1",
+    "username": "johndoe",
+    "email": "john@example.com",
+    "password": "$2a$12$XGegd/3naZr2j3H4DaeM9u/dJ5C8npUDw5rdNverrLwQ7dmr2/j3q",
+    "profile": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "credits": 0,
+    "stats": {
+      "totalCleanups": 0,
+      "tasksCompleted": 0,
+      "environmentalImpact": {
+        "co2Saved": 0,
+        "wasteRecycled": 0,
+        "treesPlanted": 0
+      }
+    },
+    "achievements": [],
+    "isActive": true,
+    "lastLogin": "2025-09-21T01:37:46.837Z",
+    "createdAt": "2025-09-21T01:29:45.698Z",
+    "updatedAt": "2025-09-21T01:37:46.837Z"
+  }
+]

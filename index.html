@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civil Sathi - Environmental Cleaning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2 style="font-size: xx-large; font-family: 'Times New Roman', Times, serif;">🌱 Civil Sathi</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#selfie" class="nav-link">Selfie Clean</a>
+                <a href="#tasks" class="nav-link">Daily Tasks</a>
+                <a href="#rewards" class="nav-link">Rewards</a>
+                <a href="#profile" class="nav-link">Profile</a>
+                <!-- Auth Buttons: Visible when not logged in -->
+                <div class="auth-buttons" id="authButtons">
+                    <button id="loginBtn" class="btn btn-primary">Login</button>
+                    <button id="registerBtn" class="btn btn-secondary">Register</button>
+                </div>
+                <!-- User Info: Visible when logged in -->
+                <div class="user-info" id="userInfo" style="display: none;">
+                    <span id="userName">Welcome, User!</span>
+                    <button id="logoutBtn" class="btn btn-outline">Logout</button>
+                </div>
+            </div>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeLogin">&times;</span>
+            <h2>🔐 Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <div id="loginError" style="color: red; margin-top: 10px; display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeRegister">&times;</span>
+            <h2>📝 Register</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Username:</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password:</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerFirstName">First Name:</label>
+                    <input type="text" id="registerFirstName">
+                </div>
+                <div class="form-group">
+                    <label for="registerLastName">Last Name:</label>
+                    <input type="text" id="registerLastName">
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <div id="registerError" style="color: red; margin-top: 10px; display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Civil Sathi</h1>
+            <p style="color: black; font-size: 25px;">Make a difference for our environment while earning rewards!</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <h3 id="totalCredits">0</h3>
+                    <p style="color: black; font-size: 15px;">Total Credits</p>
+                </div>
+                <div class="stat">
+                    <h3 id="cleanupCount">0</h3>
+                    <p style="color: black; font-size: 15px;">Cleanups Done</p>
+                </div>
+                <div class="stat">
+                    <h3 id="tasksCompleted">0</h3>
+                    <p style="color: black; font-size: 15px;">Tasks Completed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Selfie Clean Section -->
+    <section id="selfie" class="selfie-section">
+        <div class="container">
+            <h2>📸 Selfie Clean</h2>
+            <p style="color: black; font-size: 15px;">Take a selfie while disposing garbage properly and earn credits!</p>
+            
+            <div class="selfie-container">
+                <div class="camera-container">
+                    <video id="video" autoplay></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <div class="camera-overlay">
+                        <div class="capture-area"></div>
+                    </div>
+                </div>
+                
+                <div class="selfie-controls">
+                    <button id="startCamera" class="btn btn-primary">Start Camera</button>
+                    <button id="capturePhoto" class="btn btn-success" disabled>Capture Selfie</button>
+                    <button id="submitPhoto" class="btn btn-warning" disabled>Submit for Credits</button>
+                </div>
+                
+                <div class="photo-preview" id="photoPreview" style="display: none;">
+                    <img id="previewImg" src="" alt="Captured Photo">
+                    <p>Great! You've captured your environmental action. Submit to earn 10 credits!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Daily Tasks Section -->
+    <section id="tasks" class="tasks-section">
+        <div class="container">
+            <h2 style="filter: drop-shadow(2px 2px 2px rgb(235, 227, 227));">🎯 Daily Tasks</h2>
+            <p>Complete daily environmental challenges and earn massive credits!</p>
+            
+            <div class="tasks-grid">
+                <div class="task-card" data-task="recycle">
+                    <div class="task-icon">♻️</div>
+                    <h3>Recycle Challenge</h3>
+                    <p>Recycle 5 items today</p>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0/5</span>
+                    </div>
+                    <button class="btn btn-task" onclick="updateTask('recycle')">Mark Complete</button>
+                    <div class="task-reward">Reward: 50 Credits</div>
+                </div>
+                
+                <div class="task-card" data-task="plant">
+                    <div class="task-icon">🌱</div>
+                    <h3>Plant a Tree</h3>
+                    <p>Plant or care for a tree</p>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0/1</span>
+                    </div>
+                    <button class="btn btn-task" onclick="updateTask('plant')">Mark Complete</button>
+                    <div class="task-reward">Reward: 100 Credits</div>
+                </div>
+                
+                <div class="task-card" data-task="cleanup">
+                    <div class="task-icon">🧹</div>
+                    <h3>Community Cleanup</h3>
+                    <p>Clean up a public area</p>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0/1</span>
+                    </div>
+                    <button class="btn btn-task" onclick="updateTask('cleanup')">Mark Complete</button>
+                    <div class="task-reward">Reward: 75 Credits</div>
+                </div>
+                
+                <div class="task-card" data-task="energy">
+                    <div class="task-icon">⚡</div>
+                    <h3>Energy Saving</h3>
+                    <p>Turn off unused lights for 2 hours</p>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0/2</span>
+                    </div>
+                    <button class="btn btn-task" onclick="updateTask('energy')">Mark Complete</button>
+                    <div class="task-reward">Reward: 30 Credits</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rewards Section -->
+    <section id="rewards" class="rewards-section">
+        <div class="container">
+            <h2 style="filter: drop-shadow(2px 2px 2px rgb(235, 227, 227));">🎁 Rewards & Vouchers</h2>
+            <p style="color: black; font-size: 25px;">Redeem your credits for amazing Amazon vouchers!</p>
+            
+            <div class="credits-display">
+                <div class="credits-info">
+                    <h3>Your Credits: <span id="currentCredits">0</span></h3>
+                    <p style="color: black; font-size: 15px;">Earn 100 credits to unlock your first voucher!</p>
+                </div>
+            </div>
+            
+            <div class="vouchers-grid">
+                <div class="voucher-card" data-cost="100">
+                    <div class="voucher-icon">🛒</div>
+                    <h3>Amazon Voucher</h3>
+                    <p>30% off on any purchase</p>
+                    <div class="voucher-cost">100 Credits</div>
+                    <button class="btn btn-redeem" onclick="redeemVoucher(100, '30%')">Redeem</button>
+                </div>
+                
+                <div class="voucher-card" data-cost="200">
+                    <div class="voucher-icon">🛍️</div>
+                    <h3>Premium Voucher</h3>
+                    <p>40% off on any purchase</p>
+                    <div class="voucher-cost">200 Credits</div>
+                    <button class="btn btn-redeem" onclick="redeemVoucher(200, '40%')">Redeem</button>
+                </div>
+                
+                <div class="voucher-card" data-cost="500">
+                    <div class="voucher-icon">💎</div>
+                    <h3>Elite Voucher</h3>
+                    <p>50% off + Free Shipping</p>
+                    <div class="voucher-cost">500 Credits</div>
+                    <button class="btn btn-redeem" onclick="redeemVoucher(500, '50%')">Redeem</button>
+                </div>
+            </div>
+            
+            <div class="redeemed-vouchers" id="redeemedVouchers" style="display: none;">
+                <h3>Your Redeemed Vouchers</h3>
+                <div id="voucherList"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile" class="profile-section">
+        <div class="container">
+            <h2>👤 Your Profile</h2>
+            
+            <div class="profile-content">
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <h3>Environmental Impact</h3>
+                        <div class="impact-metrics">
+                            <div class="metric">
+                                <span class="metric-value" id="co2Saved">0</span>
+                                <span class="metric-unit">kg CO₂ saved</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value" id="wasteRecycled">0</span>
+                                <span class="metric-unit">kg waste recycled</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value" id="treesPlanted">0</span>
+                                <span class="metric-unit">trees planted</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <h3>Achievements</h3>
+                        <div class="achievements-list" id="achievementsList">
+                            <div class="achievement locked">
+                                <span class="achievement-icon">🏆</span>
+                                <span class="achievement-text">First Cleanup</span>
+                            </div>
+                            <div class="achievement locked">
+                                <span class="achievement-icon">🌟</span>
+                                <span class="achievement-text">Task Master</span>
+                            </div>
+                            <div class="achievement locked">
+                                <span class="achievement-icon">💎</span>
+                                <span class="achievement-text">Eco Warrior</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blockchain Info Modal -->
+    <div id="blockchainModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>🔗 Blockchain Transaction</h2>
+            <div class="blockchain-info">
+                <p><strong>Transaction Hash:</strong> <span id="txHash"></span></p>
+                <p><strong>Block Number:</strong> <span id="blockNumber"></span></p>
+                <p><strong>Credits Earned:</strong> <span id="creditsEarned"></span></p>
+                <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Authentication logic is handled by auth.js
+
+        // Show/hide modals
+        document.getElementById('loginBtn').onclick = function() {
+            document.getElementById('loginModal').style.display = 'block';
+        };
+        document.getElementById('registerBtn').onclick = function() {
+            document.getElementById('registerModal').style.display = 'block';
+        };
+        document.getElementById('closeLogin').onclick = function() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('loginError').style.display = 'none';
+        };
+        document.getElementById('closeRegister').onclick = function() {
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('registerError').style.display = 'none';
+        };
+
+        // Hide modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('loginModal')) {
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('loginError').style.display = 'none';
+            }
+            if (event.target == document.getElementById('registerModal')) {
+                document.getElementById('registerModal').style.display = 'none';
+                document.getElementById('registerError').style.display = 'none';
+            }
+        };
+
+        // Use auth.js for authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof auth !== 'undefined' && auth.isLoggedIn()) {
+                showUserInfo(auth.getUser());
+            } else {
+                showAuthButtons();
+            }
+        });
+
+        function showUserInfo(user) {
+            document.getElementById('authButtons').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('userName').textContent = 'Welcome, ' + (user && user.username ? user.username : 'User') + '!';
+        }
+
+        function showAuthButtons() {
+            document.getElementById('authButtons').style.display = 'flex';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+
+        // Login form submit using auth.js
+        document.getElementById('loginForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            try {
+                const user = await auth.login(email, password);
+                document.getElementById('loginModal').style.display = 'none';
+                showUserInfo(user);
+            } catch (err) {
+                document.getElementById('loginError').textContent = err.message || 'Login failed';
+                document.getElementById('loginError').style.display = 'block';
+            }
+        };
+
+        // Register form submit using auth.js
+        document.getElementById('registerForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const firstName = document.getElementById('registerFirstName').value;
+            const lastName = document.getElementById('registerLastName').value;
+            try {
+                const user = await auth.register({ username, email, password, firstName, lastName });
+                document.getElementById('registerModal').style.display = 'none';
+                showUserInfo(user);
+            } catch (err) {
+                document.getElementById('registerError').textContent = err.message || 'Registration failed';
+                document.getElementById('registerError').style.display = 'block';
+            }
+        };
+
+        // Logout using auth.js
+        document.getElementById('logoutBtn').onclick = function() {
+            auth.logout();
+            showAuthButtons();
+        };
+    </script>
+</body>
+</html>
