@@ -45,8 +45,33 @@
     },
     "achievements": [],
     "isActive": true,
-    "lastLogin": "2025-09-21T01:37:46.837Z",
+    "lastLogin": "2025-09-21T02:44:08.313Z",
     "createdAt": "2025-09-21T01:29:45.698Z",
-    "updatedAt": "2025-09-21T01:37:46.837Z"
+    "updatedAt": "2025-09-21T02:44:08.313Z"
+  },
+  {
+    "_id": "9b3b84d62622f67d2932ab7156ae6f26",
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "$2a$12$Xvp7aj8e5uVraNB60hyyZ.1EPBv2etnoVdQHmjms9nMcvQEpBSvli",
+    "profile": {
+      "firstName": "Test",
+      "lastName": "User"
+    },
+    "credits": 100,
+    "stats": {
+      "totalCleanups": 0,
+      "tasksCompleted": 0,
+      "environmentalImpact": {
+        "co2Saved": 0,
+        "wasteRecycled": 0,
+        "treesPlanted": 0
+      }
+    },
+    "achievements": [],
+    "isActive": true,
+    "lastLogin": "2025-09-21T02:38:06.759Z",
+    "createdAt": "2025-09-21T02:37:55.361Z",
+    "updatedAt": "2025-09-21T02:38:06.760Z"
   }
 ]

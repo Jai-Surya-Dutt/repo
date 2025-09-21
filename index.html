@@ -318,15 +318,7 @@
     <script src="script.js"></script>
     <script src="auth.js"></script>
     <script>
-        // Authentication logic is handled by auth.js
-
-        // Show/hide modals
-        document.getElementById('loginBtn').onclick = function() {
-            document.getElementById('loginModal').style.display = 'block';
-        };
-        document.getElementById('registerBtn').onclick = function() {
-            document.getElementById('registerModal').style.display = 'block';
-        };
+        // Modal close handlers
         document.getElementById('closeLogin').onclick = function() {
             document.getElementById('loginModal').style.display = 'none';
             document.getElementById('loginError').style.display = 'none';
@@ -346,65 +338,6 @@
                 document.getElementById('registerModal').style.display = 'none';
                 document.getElementById('registerError').style.display = 'none';
             }
-        };
-
-        // Use auth.js for authentication
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof auth !== 'undefined' && auth.isLoggedIn()) {
-                showUserInfo(auth.getUser());
-            } else {
-                showAuthButtons();
-            }
-        });
-
-        function showUserInfo(user) {
-            document.getElementById('authButtons').style.display = 'none';
-            document.getElementById('userInfo').style.display = 'flex';
-            document.getElementById('userName').textContent = 'Welcome, ' + (user && user.username ? user.username : 'User') + '!';
-        }
-
-        function showAuthButtons() {
-            document.getElementById('authButtons').style.display = 'flex';
-            document.getElementById('userInfo').style.display = 'none';
-        }
-
-        // Login form submit using auth.js
-        document.getElementById('loginForm').onsubmit = async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            try {
-                const user = await auth.login(email, password);
-                document.getElementById('loginModal').style.display = 'none';
-                showUserInfo(user);
-            } catch (err) {
-                document.getElementById('loginError').textContent = err.message || 'Login failed';
-                document.getElementById('loginError').style.display = 'block';
-            }
-        };
-
-        // Register form submit using auth.js
-        document.getElementById('registerForm').onsubmit = async function(e) {
-            e.preventDefault();
-            const username = document.getElementById('registerUsername').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const firstName = document.getElementById('registerFirstName').value;
-            const lastName = document.getElementById('registerLastName').value;
-            try {
-                const user = await auth.register({ username, email, password, firstName, lastName });
-                document.getElementById('registerModal').style.display = 'none';
-                showUserInfo(user);
-            } catch (err) {
-                document.getElementById('registerError').textContent = err.message || 'Registration failed';
-                document.getElementById('registerError').style.display = 'block';
-            }
-        };
-
-        // Logout using auth.js
-        document.getElementById('logoutBtn').onclick = function() {
-            auth.logout();
-            showAuthButtons();
         };
     </script>
 </body>

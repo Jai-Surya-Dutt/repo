@@ -8,7 +8,8 @@ let currentUser = null;
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🌱 Civil Sathi frontend loaded");
 
-  if (auth.isLoggedIn()) {
+  // Wait for auth module to be available
+  if (typeof auth !== 'undefined' && auth.isLoggedIn()) {
     currentUser = await auth.getUser();
     if (currentUser) {
       showUserInfo(currentUser);
@@ -61,10 +62,14 @@ function setupUIListeners() {
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
 
+    // Clear previous errors
+    document.getElementById("loginError").style.display = "none";
+
     try {
       currentUser = await auth.login(email, password);
       userCredits = currentUser.credits || 0;
       document.getElementById("loginModal").style.display = "none";
+      document.getElementById("loginForm").reset(); // Clear form
       showUserInfo(currentUser);
       updateUI();
     } catch (err) {
@@ -82,6 +87,9 @@ function setupUIListeners() {
     const firstName = document.getElementById("registerFirstName").value;
     const lastName = document.getElementById("registerLastName").value;
 
+    // Clear previous errors
+    document.getElementById("registerError").style.display = "none";
+
     try {
       currentUser = await auth.register({
         username,
@@ -92,6 +100,7 @@ function setupUIListeners() {
       });
       userCredits = currentUser.credits || 0;
       document.getElementById("registerModal").style.display = "none";
+      document.getElementById("registerForm").reset(); // Clear form
       showUserInfo(currentUser);
       updateUI();
     } catch (err) {
