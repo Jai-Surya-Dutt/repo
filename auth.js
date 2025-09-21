@@ -1,27 +1,21 @@
-// Frontend Authentication Module
-const API_BASE_URL = 'http://localhost:5000/api';
+// auth.js - Frontend Authentication Module
+const API_BASE_URL = 'http://localhost:5000/api/';
 
 class Auth {
   constructor() {
-    this.token = localStorage.getItem('authToken');
+    this.token = localStorage.getItem('authToken') || null;
     this.user = null;
   }
 
   // Check if user is logged in
   isLoggedIn() {
-    return !!this.token;
+    return Boolean(this.token);
   }
 
-  // Get current user
+  // Get current user from backend if not cached
   async getUser() {
-    if (!this.token) {
-      return null;
-    }
-
-    if (this.user) {
-      return this.user;
-    }
-
+    if (!this.token) return null;
+    if (this.user) return this.user;
     try {
       const response = await fetch(`${API_BASE_URL}/auth/verify`, {
         method: 'POST',
@@ -30,19 +24,18 @@ class Auth {
           'Content-Type': 'application/json'
         }
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        this.user = data.data.user;
-        return this.user;
-      } else {
-        // Token is invalid, clear it
-        this.logout();
+      const data = await response.json();
+      console.log('[Auth] getUser response:', data);
+      if (!response.ok) {
+        await this.logout(); // Token invalid or expired
         return null;
       }
+      // Support both `data.data.user` and `data.user` structures
+      this.user = data.data?.user || data.user || null;
+      return this.user;
     } catch (error) {
-      console.error('Error fetching user:', error);
-      this.logout();
+      console.error('[Auth] getUser error:', error);
+      await this.logout();
       return null;
     }
   }
@@ -52,24 +45,18 @@ class Auth {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-
       const data = await response.json();
-
-      if (response.ok) {
-        this.token = data.data.token;
-        this.user = data.data.user;
-        localStorage.setItem('authToken', this.token);
-        return this.user;
-      } else {
-        throw new Error(data.message || 'Login failed');
-      }
+      console.log('[Auth] login response:', data);
+      if (!response.ok) throw new Error(data.message || 'Login failed');
+      this.token = data.data?.token || data.token || null;
+      this.user = data.data?.user || data.user || null;
+      if (this.token) localStorage.setItem('authToken', this.token);
+      return this.user;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('[Auth] login error:', error);
       throw error;
     }
   }
@@ -79,24 +66,23 @@ class Auth {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)
       });
 
       const data = await response.json();
+      console.log('[Auth] register response:', data);
 
-      if (response.ok) {
-        this.token = data.data.token;
-        this.user = data.data.user;
-        localStorage.setItem('authToken', this.token);
-        return this.user;
-      } else {
-        throw new Error(data.message || 'Registration failed');
-      }
+      if (!response.ok) throw new Error(data.message || 'Registration failed');
+
+      this.token = data.data?.token || data.token || null;
+      this.user = data.data?.user || data.user || null;
+      if (this.token) localStorage.setItem('authToken', this.token);
+
+      return this.user;
+
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('[Auth] register error:', error);
       throw error;
     }
   }
@@ -114,7 +100,7 @@ class Auth {
         });
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('[Auth] logout error:', error);
     } finally {
       this.token = null;
       this.user = null;
@@ -124,33 +110,35 @@ class Auth {
 
   // Get authorization header for API requests
   getAuthHeader() {
-    return this.token ? `Bearer ${this.token}` : null;
+    return this.token ? { 'Authorization': `Bearer ${this.token}` } : {};
   }
 
   // Make authenticated API request
   async authenticatedRequest(url, options = {}) {
-    if (!this.token) {
-      throw new Error('User not authenticated');
-    }
+    if (!this.token) throw new Error('User not authenticated');
 
-    const defaultOptions = {
-      headers: {
-        'Authorization': `Bearer ${this.token}`,
-        ...options.headers
-      }
+    const headers = {
+      ...this.getAuthHeader(),
+      ...options.headers
     };
 
-    // Only set Content-Type if not already set (for file uploads)
-    if (!options.headers || !options.headers['Content-Type']) {
-      defaultOptions.headers['Content-Type'] = 'application/json';
-    }
+    if (!headers['Content-Type']) headers['Content-Type'] = 'application/json';
 
-    return fetch(url, { ...options, ...defaultOptions });
+    try {
+      const response = await fetch(url, { ...options, headers });
+      const data = await response.json().catch(() => ({})); // fallback if not JSON
+      if (!response.ok) {
+        console.error('[Auth] Request error:', data);
+        throw new Error(data.message || 'Request failed');
+      }
+      return data;
+    } catch (error) {
+      console.error('[Auth] authenticatedRequest error:', error);
+      throw error;
+    }
   }
 }
 
 // Create global auth instance
 const auth = new Auth();
-
-// Export for use in other scripts
 window.auth = auth;

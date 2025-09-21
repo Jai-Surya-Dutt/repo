@@ -1,3 +1,4 @@
+const API_BASE_URL = 'http://localhost:5000/api/';
 const jwt = require('jsonwebtoken');
 const fileStorage = require('../utils/fileStorage');
 
